@@ -7,15 +7,15 @@ Implementation of stack (LIFO)/queue(FIFO)/vector.
 
 ## lab_02
 
-Implementation of single/double linked list, circular buffer
+Implementation of single/double linked list, circular buffer.
+
+
 
 What we will be do:
 
 - build different structures of data;
 - compare our realization with STL;
 - ~~may be something also?~~
-
-
 
 ## How work with this repository
 
