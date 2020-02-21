@@ -7,7 +7,7 @@ Implementation of stack (LIFO)/queue(FIFO)/vector.
 
 ## lab_02
 
-Implementation of single/double linked list, circular buffer.
+Implementation of single/double linked list, circular buffer.  
 
 
 
