@@ -150,7 +150,7 @@ public:
 	}
 private:
 
-	<typename T>
+	template<typename>
 	class Stack {
 	public:
 		T data;
@@ -191,6 +191,7 @@ void StackStruct<T>::push(T data)
 	if (this->head == nullptr)
 	{
 		head = new Stack<T>(data);
+		this->tail = this->head;
 	}
 	else
 	{
@@ -239,7 +240,7 @@ T StackStruct<T>::peek()
 }
 
 template<typename T>
-inline void StackStruct<T>::swap(StackStruct<T> &stack)
+void StackStruct<T>::swap(StackStruct<T> &stack)
 {
 	//here our queues are just commuting their heads adresses, tail adresses and their sizes
 	Stack<T>* head;
@@ -257,7 +258,7 @@ inline void StackStruct<T>::swap(StackStruct<T> &stack)
 }
 
 template<typename T>
-inline void StackStruct<T>::reverse()
+void StackStruct<T>::reverse()
 {
 	T* tempArr = new T[size]; //temporary array to save our stack data
 	int j = size;

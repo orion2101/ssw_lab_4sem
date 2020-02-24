@@ -1,6 +1,6 @@
 #include <iostream>
 
-template <typename T>
+template<typename T>
 class VectorStruct {
 public:
 	VectorStruct();
@@ -10,12 +10,12 @@ public:
 	T pop(int index);
 	T peek();
 	int count() { return size; };
-	void swap(VectorStruct<T> &vector, int index1, int index2);
+	void swap(VectorStruct<T>& vector, int index1, int index2);
 	void reverse();
 	T& operator[](const int index); // just to display the value of an item
 
 	/*********************definition comparision operators*****************************************************/
-	friend bool operator==(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator==(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		int size1 = vector1.count();
 		int size2 = vector2.count();
@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	friend bool operator!=(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator!=(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		if (!(vector1 == vector2))
 		{
@@ -45,7 +45,7 @@ public:
 		return false;
 	}
 
-	friend bool operator <(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator <(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		int size1 = vector1.count();
 		int size2 = vector2.count();
@@ -82,7 +82,7 @@ public:
 
 	}
 
-	friend bool operator >(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator >(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		int size1 = vector1.count();
 		int size2 = vector2.count();
@@ -118,7 +118,7 @@ public:
 		}
 	}
 
-	friend bool operator <=(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator <=(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		if ((vector1 < vector2) || (vector1 == vector2))
 		{
@@ -127,7 +127,7 @@ public:
 		return false;
 	}
 
-	friend bool operator >=(VectorStruct<T> &vector1, VectorStruct<T> &vector2)
+	friend bool operator >=(VectorStruct<T>& vector1, VectorStruct<T>& vector2)
 	{
 		if ((vector1 > vector2) || (vector1 == vector2))
 		{
@@ -138,7 +138,7 @@ public:
 
 private:
 
-	<typename T>
+	template<typename>
 	class Vector {
 	public:
 		T data;
@@ -153,7 +153,6 @@ private:
 		}
 	};
 	Vector<T>* head;
-	Vector<T>* tail;
 	int size;
 };
 
@@ -162,7 +161,6 @@ VectorStruct<T>::VectorStruct()
 {
 	size = 0;
 	head = nullptr;
-	tail = nullptr;
 }
 
 template<typename T>
@@ -227,7 +225,6 @@ void VectorStruct<T>::push(int index, T data)
 			previous = actual;
 			actual = actual->nxtPtr;
 			actual->prevPtr = previous;
-			this->tail = actual; //the last item of our vector
 		}
 	}
 	size++;
@@ -242,45 +239,46 @@ T VectorStruct<T>::pop(int index)
 	Vector<T>* previous;
 
 	actual = this->head;
-	if ((index + 1) <= size) //we always check if that index exists
+	if (index == 0)
+	{
+		tempData = actual->data;
+		if (actual->nxtPtr != nullptr)
+		{
+			next = actual->nxtPtr;
+			next->prevPtr = nullptr;
+			this->head = next;
+		}
+		size--;
+		delete actual;
+		//return tempData;
+
+	}
+	else if ((index + 1) <= size) //we always check if that index exists
 	{
 		int counter = 0;
 
-		while (actual->nxtPtr != nullptr)
+		previous = actual; //if we delete the item, next to this one, it will be the previous item of the item next to the one that we delete
+
+		actual = actual->nxtPtr;
+		counter++;
+
+		if (counter == index)
 		{
-			previous = actual; //if we delete the item, next to this one, it will be the previous item of the item next to the one that we delete
 
-			actual = actual->nxtPtr;
-			counter++;
-
-			if (counter == index)
-			{
-				if (actual == this->tail)
-				{
-					tempData = actual->data;
-					previous->nxtPtr = nullptr;
-					this->tail = previous;
-					delete actual;
-					size--;
-					return tempData;
-				}
-				else
-				{
-					tempData = actual->data; //we save the data that we return before delete
-					previous->nxtPtr = actual->nxtPtr; //the next item of the item that is before the one that we delete will be the next to the one that we delete
-					next = actual->nxtPtr;
-					next->prevPtr = previous; // the previous item of the next item to the one that we delete will be the previous to the one that we delete
-					delete actual;
-					size--;
-					return tempData;
-				}
-			}
+			tempData = actual->data; //we save the data that we return before delete
+			previous->nxtPtr = actual->nxtPtr; //the next item of the item that is before the one that we delete will be the next to the one that we delete
+			next = actual->nxtPtr;
+			next->prevPtr = previous; // the previous item of the next item to the one that we delete will be the previous to the one that we delete
+			delete actual;
+			size--;
+			//return tempData;
 		}
 	}
 	else
 	{
 		std::cout << "Error: there is no item at that index" << std::endl;
 	}
+	return tempData;
 }
 
 template<typename T>
@@ -308,7 +306,7 @@ T& VectorStruct<T>::operator[](const int index)
 }
 
 template<typename T>
-inline void VectorStruct<T>::swap(VectorStruct<T> &vector, int index1, int index2)
+void VectorStruct<T>::swap(VectorStruct<T>& vector, int index1, int index2)
 {
 	T tempdata1 = pop(index1); //we pop and save value of the item at index1
 	T tempdata2 = vector.pop(index2); //we pop and save value of the item at index 2
@@ -317,18 +315,18 @@ inline void VectorStruct<T>::swap(VectorStruct<T> &vector, int index1, int index
 }
 
 template<typename T>
-inline void VectorStruct<T>::reverse()
+void VectorStruct<T>::reverse()
 {
 	T tempdata;
 	int i = 0;
 	int j = size - 1; // index of the last item
 	int k = size / 2; // middle item
-	while (i!=k)
+	while (i != k)
 	{
 		//begining with by the limits and by incrementing "i" and decrementing "j", we swap items at those indexes
 		//continuing while we don't reach the middle of the structure
 		tempdata = pop(j);
-		push(i, tempdata); 
+		push(i, tempdata);
 		tempdata = pop(i + 1);
 		push(j, tempdata);
 		i++;

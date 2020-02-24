@@ -153,7 +153,7 @@ public:
 
 private:
 
-	<typename T>
+	template<typename>
 	class Queue {
 	public:
 		T data;
@@ -169,7 +169,7 @@ private:
 	int size;
 };
 
-template <typename T>
+template<typename T>
 QueueStruct<T>::QueueStruct()
 {
 	size = 0;
@@ -181,7 +181,7 @@ QueueStruct<T>::~QueueStruct()
 {
 }
 
-template <typename T>
+template<typename T>
 void QueueStruct<T>::push(T data)
 {
 	if (head == nullptr)
@@ -236,7 +236,7 @@ T QueueStruct<T>::peek()
 }
 
 template<typename T>
-inline void QueueStruct<T>::swap(QueueStruct<T> &queue)
+void QueueStruct<T>::swap(QueueStruct<T> &queue)
 {
 	//here our queues are just commuting their heads adresses and their sizes
 	Queue<T>* head;
@@ -250,7 +250,7 @@ inline void QueueStruct<T>::swap(QueueStruct<T> &queue)
 }
 
 template<typename T>
-inline void QueueStruct<T>::reverse()
+void QueueStruct<T>::reverse()
 {
 	T* tempArr = new T[size]; //temporary array to save our queue data
 	int j = size;
