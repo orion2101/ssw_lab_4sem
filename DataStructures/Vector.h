@@ -138,7 +138,7 @@ public:
 
 private:
 
-	template <typename T>
+	<typename T>
 	class Vector {
 	public:
 		T data;

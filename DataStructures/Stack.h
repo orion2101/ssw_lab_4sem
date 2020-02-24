@@ -150,7 +150,7 @@ public:
 	}
 private:
 
-	template <typename T>
+	<typename T>
 	class Stack {
 	public:
 		T data;

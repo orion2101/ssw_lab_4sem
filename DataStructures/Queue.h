@@ -153,7 +153,7 @@ public:
 
 private:
 
-	template <typename T>
+	<typename T>
 	class Queue {
 	public:
 		T data;
