@@ -1,32 +1,31 @@
 #include <iostream>
 
-template <typename T>
+template <typename T1>
 class QueueStruct {
 public:
 	QueueStruct();
 	~QueueStruct();
 
-	void push(T data);
-	T pop();
-	T peek();
-	int count() { return size; };
-	void swap(QueueStruct<T> &queue);
+	void push(T1 data);
+	T1 pop();
+	T1 peek();
+	int count() const { return size; };
+	void swap(QueueStruct<T1> &queue);
 	void reverse();
 
-	bool operator==(QueueStruct<T> &queue)
+	bool operator==(const QueueStruct<T1> &queue)
 	{
-		int size1 = this->count();
+		int size1 = this->size;
 		int size2 = queue.count();
-		Queue<T>* actual1;
-		Queue<T>* actual2;
+
 		if (size1 != size2)
 		{
 			return false;
 		}
 		else
 		{
-			actual1 = this->head;
-			actual2 = queue.head;
+			Queue* actual1 = this->head;
+			Queue* actual2 = queue.head;
 			for (int i = 0; i < size1; i++)
 			{
 				if (actual1->data != actual2->data)
@@ -40,23 +39,17 @@ public:
 		}
 	}
 
-	friend bool operator!=(QueueStruct<T> &queue1, QueueStruct<T> &queue2)
+	bool operator!=(const QueueStruct<T1> &queue2)
 	{
-		if (!( queue1 == queue2))
-		{
-			return true;
-		}
-		return false;
+		return !(*this == queue2);
 	}
 
-	friend bool operator<(QueueStruct<T>& queue1, QueueStruct<T> &queue2)
+	bool operator<(const QueueStruct<T1> &queue2)
 	{
-		Queue<T>* actual1;
-		Queue<T>* actual2;
-		int size1 = queue1.count();
+		int size1 = this->size;
 		int size2 = queue2.count();
 		int min = 0;
-		if (queue1 == queue2)
+		if (*this == queue2)
 		{
 			return false;
 		}
@@ -70,8 +63,8 @@ public:
 			{
 				min = size2;
 			}
-			actual1 = queue1.head;
-			actual2 = queue2.head;
+			Queue* actual1 = this->head;
+			Queue* actual2 = queue2.head;
 			for (int i = 0; i < min; i++)
 			{
 				if (actual1->data > actual2->data)
@@ -91,14 +84,12 @@ public:
 		}
 	}
 
-	friend bool operator>(QueueStruct<T> &queue1, QueueStruct<T> &queue2)
+	bool operator>(const QueueStruct<T1> &queue2)
 	{
-		Queue<T>* actual1;
-		Queue<T>* actual2;
-		int size1 = queue1.count();
+		int size1 = this->size;
 		int size2 = queue2.count();
 		int min = 0;
-		if (queue1 == queue2)
+		if (*this == queue2)
 		{
 			return false;
 		}
@@ -112,8 +103,8 @@ public:
 			{
 				min = size2;
 			}
-			actual1 = queue1.head;
-			actual2 = queue2.head;
+			Queue* actual1 = this->head;
+			Queue* actual2 = queue2.head;
 			for (int i = 0; i < min; i++)
 			{
 				if (actual1->data < actual2->data)
@@ -133,18 +124,18 @@ public:
 		}
 	}
 	
-	friend bool operator <=(QueueStruct<T> &queue1, QueueStruct<T> &queue2)
+	bool operator <=(const QueueStruct<T1> &queue2)
 	{
-		if ((queue1 < queue2) || (queue1 == queue2))
+		if ((*this < queue2) || (*this == queue2))
 		{
 			return true;
 		}
 		return false;
 	}
 
-	friend bool operator >=(QueueStruct<T> &queue1, QueueStruct<T> &queue2)
+	bool operator >=(const QueueStruct<T1> &queue2)
 	{
-		if ((queue1 > queue2) || (queue1 == queue2))
+		if ((*this > queue2) || (*this == queue2))
 		{
 			return true;
 		}
@@ -153,62 +144,68 @@ public:
 
 private:
 
-	template<typename>
 	class Queue {
 	public:
-		T data;
+		T1 data;
 		Queue* nxtPtr;
 
-		Queue(T data = T(), Queue* nxtPtr = nullptr)
+		Queue(T1 data = T1(), Queue* nxtPtr = nullptr)
 		{
 			this->data = data;
 			this->nxtPtr = nxtPtr;
 		}
 	};
-	Queue<T>* head;
+	Queue* head;
 	int size;
 };
 
-template<typename T>
-QueueStruct<T>::QueueStruct()
+template <typename T1>
+QueueStruct<T1>::QueueStruct()
 {
 	size = 0;
 	head = nullptr;
 }
 
-template<typename T>
-QueueStruct<T>::~QueueStruct()
+template<typename T1>
+QueueStruct<T1>::~QueueStruct()
 {
+	Queue* actual = this->head;
+	int size = this->size;
+	for (int i = 0; i < size; i++)
+	{
+		pop();
+	}
+	actual = nullptr;
 }
 
-template<typename T>
-void QueueStruct<T>::push(T data)
+template <typename T1>
+void QueueStruct<T1>::push(T1 data)
 {
-	if (head == nullptr)
+	if (this->head == nullptr)
 	{
-		head = new Queue<T>(data);
+		this->head = new Queue(data);
 	}
 	else
 	{
-		Queue<T>* actual = this->head;
+		Queue* actual = this->head;
 		while (actual->nxtPtr != nullptr) // while we are not at the end of the queue
 		{
 			actual = actual->nxtPtr;
 		}
-		actual->nxtPtr = new Queue<T>(data);
+		actual->nxtPtr = new Queue(data);
 	}
 	size++;
 }
 
-template<typename T>
-T QueueStruct<T>::pop()
+template<typename T1>
+T1 QueueStruct<T1>::pop()
 {
 	if (size != 0)
 	{
-		T tempData;
-		Queue<T>* actual = this->head; // In a queue the first item is always the first that gets out
+		T1 tempData;
+		Queue* actual = this->head; // In a queue the first item is always the first that gets out
 		tempData = actual->data;
-		head = actual->nxtPtr; // the new head is the last previous item to head
+		this->head = actual->nxtPtr; // the new head is the last previous item to head
 		delete actual;
 		size--;
 		return tempData;
@@ -220,12 +217,12 @@ T QueueStruct<T>::pop()
 	}
 }
 
-template<typename T>
-T QueueStruct<T>::peek()
+template<typename T1>
+T1 QueueStruct<T1>::peek()
 {
 	if (size != 0)
 	{
-		Queue<T>* actual = this->head;
+		Queue* actual = this->head;
 		return actual->data;
 	}
 	else
@@ -235,11 +232,11 @@ T QueueStruct<T>::peek()
 	}
 }
 
-template<typename T>
-void QueueStruct<T>::swap(QueueStruct<T> &queue)
+template<typename T1>
+void QueueStruct<T1>::swap(QueueStruct<T1> &queue)
 {
 	//here our queues are just commuting their heads adresses and their sizes
-	Queue<T>* head;
+	Queue* head;
 	int size;
 	head = queue.head;
 	size = queue.count();
@@ -249,10 +246,10 @@ void QueueStruct<T>::swap(QueueStruct<T> &queue)
 	this->size = size;
 }
 
-template<typename T>
-void QueueStruct<T>::reverse()
+template<typename T1>
+void QueueStruct<T1>::reverse()
 {
-	T* tempArr = new T[size]; //temporary array to save our queue data
+	T1* tempArr = new T1[size]; //temporary array to save our queue data
 	int j = size;
 
 	for (int i = 0; i < j; i++)
