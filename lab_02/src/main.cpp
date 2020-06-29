@@ -1,26 +1,33 @@
-#include <iostream>
-#include "generator.h"
-using namespace std;
+#include "lists.h"
+
+int main()
+{
+	list<int> liste;
+
+	liste.pushSLL(0, 0);
+	liste.pushSLL(1, 0);
+	liste.pushSLL(2, 0);
+	liste.pushSLL(3, 0);
+	liste.pushSLL(4, 0);
+	liste.pushSLL(5, 0);
+
+	liste.view();
+	cout << liste.countSLL() << endl;
+
+	liste.popSLL(1);
 
 
+	liste.insert(9, 1);
+	liste.view();
+	cout << liste.countSLL() << endl;
 
-int main(int argc, char *argv[]) {
-    try {
-    	auto t1 = generate<int>(234); // t1 is std::vector
-    	cout << "<TEST>" << endl;
-    	cout << "\t" << t1[0] << " | " << t1.size() <<  endl;
+	liste.eraseSLL(1);
+	liste.view();
+	cout << liste.countSLL() << endl;
 
+	liste.eraseSLL(2);
+	liste.view();
+	cout << liste.countSLL() << endl;
 
-    	auto t2 = generate<string>(5);
-    	cout << "<TEST>" << endl;
-    	cout << "\t" << t2[0] << " | " << t2.size() <<  endl;
-
-    	auto t3 = generate<float>(6);
-    	cout << "<TEST>" << endl;
-    	cout << "\t" << t3[0] << " | " << t3.size() << endl;
-    } catch (const std::exception &exp) {
-        cout << exp.what() << endl;
-    }
-
-    return 0;
+	//cout << liste.beginSLL() << endl;
 }
