@@ -244,6 +244,7 @@ unsigned list<T>::countSLL()
 template<typename T>
 void list<T>::merge(list<T> &list)
 {
+	//проверка первого списка на упорядоченность
 	SLL<T>* actual = this->start;
 	SLL<T>* nxt = actual->nxtPtr;
 	T min = actual->data;
@@ -254,17 +255,17 @@ void list<T>::merge(list<T> &list)
 		{
 			if (nxt->data < min)
 			{
-				cout << "list1 is not in ranged" << endl;
-				return 1;
+				cout << "list1 is not ranged" << endl;
 			}
 			nxt = nxt->nxtPtr;
 		}
 		actual = actual->nxtPtr;;
 	}
 
-	actual = list->start;
+	//проверка второго списка на упорядоченность
+	actual = list.start;
 	nxt = actual->nxtPtr;
-	T min = actual->data;
+	min = actual->data;
 	while (actual->nxtPtr != nullptr)
 	{
 		min = actual->data;
@@ -272,14 +273,40 @@ void list<T>::merge(list<T> &list)
 		{
 			if (nxt->data < min)
 			{
-				cout << "list2 is not in ranged" << endl;
-				return 1;
+				cout << "list2 is not ranged" << endl;
 			}
 			nxt = nxt->nxtPtr;
 		}
 		actual = actual->nxtPtr;;
 	}
 
+	//добавление элементов первого списка во второй
+	nxt = list.start;
+	while (nxt->nxtPtr != nullptr)
+	{
+		pushSLL(nxt->data, 0);
+		nxt = nxt->nxtPtr;
+	}
+	pushSLL(nxt->data, 0);
 
-	
+	//упорядочивание
+	actual = this->start;
+	nxt = actual->nxtPtr;
+	T data = T();
+	while (actual->nxtPtr != nullptr)
+	{
+		min = actual->data;
+		nxt = actual->nxtPtr;
+		while (nxt->nxtPtr != nullptr)
+		{
+			if (nxt->data <= min)
+			{
+				data = nxt->data;
+				eraseSLL(nxt->index);
+				insert(nxt->data, actual->index);
+			}
+			nxt = nxt->nxtPtr;
+		}
+		actual = actual->nxtPtr;;
+	}
 }

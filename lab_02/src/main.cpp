@@ -2,32 +2,43 @@
 
 int main()
 {
-	list<int> liste;
+	list<int> liste1;
 
-	liste.pushSLL(0, 0);
-	liste.pushSLL(1, 0);
-	liste.pushSLL(2, 0);
-	liste.pushSLL(3, 0);
-	liste.pushSLL(4, 0);
-	liste.pushSLL(5, 0);
+	liste1.pushSLL(0, 0);
+	liste1.pushSLL(1, 0);
+	liste1.pushSLL(2, 0);
+	liste1.pushSLL(3, 0);
+	liste1.pushSLL(4, 0);
+	liste1.pushSLL(5, 0);
 
-	liste.view();
-	cout << liste.countSLL() << endl;
+	list<int> liste2;
+	liste2.pushSLL(1, 0);
+	liste2.pushSLL(2, 0);
+	liste2.pushSLL(3, 0);
+	liste2.pushSLL(4, 0);
 
-	liste.popSLL(1);
+	liste1.merge(liste2);
+
+	liste1.view();
 
 
-	liste.insert(9, 1);
-	liste.view();
-	cout << liste.countSLL() << endl;
+	//liste.view();
+	//cout << liste.countSLL() << endl;
 
-	liste.eraseSLL(1);
-	liste.view();
-	cout << liste.countSLL() << endl;
+	//liste.popSLL(1);
 
-	liste.eraseSLL(2);
-	liste.view();
-	cout << liste.countSLL() << endl;
+
+	//liste.insert(9, 1);
+	//liste.view();
+	//cout << liste.countSLL() << endl;
+
+	//liste.eraseSLL(1);
+	//liste.view();
+	//cout << liste.countSLL() << endl;
+
+	//liste.eraseSLL(2);
+	//liste.view();
+	//cout << liste.countSLL() << endl;
 
 	//cout << liste.beginSLL() << endl;
 }
