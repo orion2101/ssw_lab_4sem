@@ -12,13 +12,14 @@ public:
 	void popSLL(unsigned where);
 	void insertSLL(T data, unsigned where);
 	void eraseSLL(unsigned index);
-	void viewSLL();
-	void indexationSLL();
+	void viewSLL(); //вывод элементов списка
+	void indexationSLL(); //реорганизация индексов
 	list<T>* beginSLL();
 	list<T>* endSLL();
-	unsigned countSLL();
+	unsigned countSLL(); //подсчёт размер списка
 	void mergeSLL(list<T>& list);
-	void divideSLL(list<T>& list1, list<T>& empty_list, T value);
+	void divideSLL(list<T>& list1, list<T>& empty_list, T value); //list1 - список элементов для рвзбиения, список в котором будут находится элементы больше чем порогово значения
+	//empty_list - пустой список, в котором будут рвсоложены элементы меньше чем порогозначения
 
 	//функции двухсвязного списка
 	void pushDLL(T data, unsigned where);
@@ -191,7 +192,6 @@ void list<T>::insertSLL(T data, unsigned where)
 template<typename T>
 void list<T>::eraseSLL(unsigned index)
 {	
-	//SLL<T>* element = actual->nxtPtr;
 	if (index == 0) //если удалящийся элемент явлается началом списка
 	{
 		popSLL(0);
@@ -200,7 +200,7 @@ void list<T>::eraseSLL(unsigned index)
 	{
 		popSLL(1);
 	}
-	else //if (actual->index == index)
+	else 
 	{
 		SLL<T>* actual = this->start;
 		SLL<T>* nxtItem = actual->nxtPtr;
@@ -271,7 +271,7 @@ list<T>* list<T>::endSLL()
 template<typename T>
 unsigned list<T>::countSLL()
 {
-	return size;
+	return this->size;
 }
 
 template<typename T>
@@ -420,7 +420,7 @@ void list<T>::pushDLL(T data, unsigned where)
 }
 
 template<typename T>
-inline void list<T>::popDLL(unsigned where)
+void list<T>::popDLL(unsigned where)
 {
 	if (this->start == nullptr)
 	{
@@ -450,49 +450,209 @@ inline void list<T>::popDLL(unsigned where)
 }
 
 template<typename T>
-inline void list<T>::insertDLL(T data, unsigned where)
+void list<T>::insertDLL(T data, unsigned where)
 {
+	DLL<T>* actual = this->start;
+	while (actual->nxtPtr != nullptr)
+	{
+		if (where == 0)
+		{
+			pushDLL(data, 1);
+			break;
+		}
+		else
+		{
+			DLL<T>* nxtItem = actual->nxtPtr;
+			if (where == nxtItem->index)
+			{
+				actual->nxtPtr = new DLL<T>(data);
+				DLL<T>* newItem = actual->nxtPtr;
+				newItem->nxtPtr = nxtItem;
+				newItem->prevPtr = actual;
+				nxtItem->prevPtr = newItem;
+				indexationDLL();
+				break;
+			}
+		}
+		actual = actual->nxtPtr;
+	}
+	size++;
 }
 
 template<typename T>
-inline void list<T>::eraseDLL(unsigned index)
+void list<T>::eraseDLL(unsigned index)
 {
+	if (index == 0) //если удалящийся элемент явлается началом списка
+	{
+		popDLL(0);
+	}
+	else if (index == (size - 1))
+	{
+		popDLL(1);
+	}
+	else
+	{
+		DLL<T>* actual = this->start;
+		DLL<T>* nxtItem = actual->nxtPtr;
+		while (actual->nxtPtr != nullptr)
+		{
+			if (nxtItem->index == index)
+			{
+				nxtItem = nxtItem->nxtPtr;
+				actual->nxtPtr = nxtItem;
+				nxtItem->prevPtr = actual;
+				indexationDLL();
+				size--;
+				break;
+			}
+			actual = actual->nxtPtr;
+			nxtItem = actual->nxtPtr;
+		}
+	}
 }
 
 template<typename T>
-inline void list<T>::viewDLL()
+void list<T>::viewDLL()
 {
+	DLL<T>* actual = this->start;
+	cout << actual->data << " ";
+	while (actual->nxtPtr != nullptr)
+	{
+		actual = actual->nxtPtr;
+		cout << actual->data << " ";
+	}
+	cout << endl;
 }
 
 template<typename T>
-inline void list<T>::indexationDLL()
+void list<T>::indexationDLL()
 {
+	DLL<T>* actual = this->start;
+	actual->index = 0;
+	unsigned index = actual->index;
+	actual = actual->nxtPtr;
+	while (actual->nxtPtr != nullptr)
+	{
+		actual->index = ++index;
+		actual = actual->nxtPtr;
+	}
+	actual->index = ++index;
 }
 
 template<typename T>
-inline list<T>* list<T>::beginDLL()
+list<T>* list<T>::beginDLL()
 {
-	return NULL;
+	return this->start;
 }
 
 template<typename T>
-inline list<T>* list<T>::endDLL()
+list<T>* list<T>::endDLL()
 {
-	return NULL;
+	return this->end;
 }
 
 template<typename T>
-inline unsigned list<T>::countDLL()
+unsigned list<T>::countDLL()
 {
-	return 0;
+	return this->size;
 }
 
 template<typename T>
-inline void list<T>::mergeDLL(list<T>& list)
+void list<T>::mergeDLL(list<T>& list)
 {
+	//проверка первого списка на упорядоченность
+	DLL<T>* actual = this->start;
+	DLL<T>* nxt = actual->nxtPtr;
+	T min = actual->data;
+	while (actual->nxtPtr != nullptr)
+	{
+		min = actual->data;
+		while (nxt->nxtPtr != nullptr)
+		{
+			if (nxt->data < min)
+			{
+				cout << "list1 is not ranged" << endl;
+			}
+			nxt = nxt->nxtPtr;
+		}
+		actual = actual->nxtPtr;;
+	}
+
+	//проверка второго списка на упорядоченность
+	actual = list.start;
+	nxt = actual->nxtPtr;
+	min = actual->data;
+	while (actual->nxtPtr != nullptr)
+	{
+		min = actual->data;
+		while (nxt->nxtPtr != nullptr)
+		{
+			if (nxt->data < min)
+			{
+				cout << "list2 is not ranged" << endl;
+			}
+			nxt = nxt->nxtPtr;
+		}
+		actual = actual->nxtPtr;;
+	}
+
+	//добавление элементов первого списка во второй
+	nxt = list.start;
+	while (nxt->nxtPtr != nullptr)
+	{
+		pushDLL(nxt->data, 0);
+		nxt = nxt->nxtPtr;
+	}
+	pushDLL(nxt->data, 0);
+
+	//упорядочивание
+	actual = this->start;
+	nxt = actual->nxtPtr;
+	T data = T();
+	while (actual->nxtPtr != nullptr)
+	{
+		min = actual->data;
+		nxt = actual->nxtPtr;
+		while (nxt->nxtPtr != nullptr)
+		{
+			if (nxt->data <= min)
+			{
+				data = nxt->data;
+				eraseDLL(nxt->index);
+				insertDLL(nxt->data, actual->index);
+			}
+			nxt = nxt->nxtPtr;
+		}
+		actual = actual->nxtPtr;;
+	}
 }
 
 template<typename T>
-inline void list<T>::divideDLL(list<T>& list1, list<T>& empty_list, T value)
+void list<T>::divideDLL(list<T>& list1, list<T>& empty_list, T value)
 {
+	DLL<T>* actual = list1.start;
+	while (actual->nxtPtr != nullptr)
+	{
+		if (actual->data < value)
+		{
+			empty_list.pushDLL(actual->data, 0);
+		}
+		actual = actual->nxtPtr;
+	}
+
+	actual = list1.start;
+	int index = -1;
+	while (actual->nxtPtr != nullptr)
+	{
+		if (actual->data < value)
+		{
+			index = actual->index;
+		}
+		if (index != -1)
+		{
+			list1.eraseDLL(index);
+		}
+		actual = actual->nxtPtr;
+		index = -1;
+	}
 }
