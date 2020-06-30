@@ -63,10 +63,11 @@ CBuff<T>::~CBuff()
 template<typename T>
 void CBuff<T>::createCB(unsigned size)
 {
+	int index = 0;
 	this->size = size;
 	this->start = new CB<T>();
 	CB<T>* actual = this->start;
-	actual->index = 0;
+	actual->index = index;
 	actual->used = false;
 
 	CB<T>* previous = this->start;
@@ -76,7 +77,8 @@ void CBuff<T>::createCB(unsigned size)
 		actual->nxtPtr = new CB<T>();
 		actual = actual->nxtPtr;
 		actual->prevPtr = previous;
-		actual->index = ++(previous->index);
+		index++;
+		actual->index = index;
 		actual->used = false;
 	}
 
@@ -91,16 +93,16 @@ template<typename T>
 void CBuff<T>::pushCB(T data)
 {
 	CB<T>* actual = this->end;
-	if (actual->used == 0)
+	if (actual->used == false)
 	{
 		actual->data = data;
-		actual->used = 1;
+		actual->used = true;
 	}
 	else
 	{
 		moveCB();
 		actual->data = data;
-		actual->used = 1;
+		actual->used = true;
 	}
 }
 
@@ -108,7 +110,7 @@ template<typename T>
 T CBuff<T>::popCB()
 {
 	CB<T>* actual = this->start;
-	actual->used = 0;
+	actual->used = false;
 	return actual->data;
 }
 
@@ -140,7 +142,7 @@ void CBuff<T>::insertCB(T data, unsigned where)
 	actual->data = data;
 	if (actual->used == 0)
 	{
-		actual->used = 1;
+		actual->used = true;
 	}
 }
 
@@ -153,7 +155,7 @@ void CBuff<T>::eraseCB(unsigned index)
 		actual = actual->nxtPtr;
 	}
 	
-	actual->used = 0;
+	actual->used = false;
 }
 
 template<typename T>
@@ -197,7 +199,7 @@ int CBuff<T>::mergeCB(CBuff<T>& buff)
 	CB<T>* actual = this->start;
 	while (actual != this->end)
 	{
-		if (actual->used == 1)
+		if (actual->used == true)
 		{
 			used1++;
 			actual = actual->nxtPtr;
@@ -207,7 +209,7 @@ int CBuff<T>::mergeCB(CBuff<T>& buff)
 	actual = buff.start;
 	while (actual != buff.end)
 	{
-		if (actual->used == 1)
+		if (actual->used == true)
 		{
 			used2++;
 			actual = actual->nxtPtr;
@@ -223,10 +225,10 @@ int CBuff<T>::mergeCB(CBuff<T>& buff)
 	actual = buff.start;
 	while (actual != buff.end)
 	{
-		if (actual->used == 1)
+		if (actual->used == true)
 		{
 			CB<T>* actual_1 = this->start;
-			while (actual_1->used != 0)
+			while (actual_1->used != false)
 			{
 				actual_1 = actual_1->nxtPtr;
 			}
