@@ -67,15 +67,17 @@ void CBuff<T>::createCB(unsigned size)
 	this->start = new CB<T>();
 	CB<T>* actual = this->start;
 	actual->index = 0;
+	actual->used = false;
 
-	CB<T>* previous = actual;
-	for (int i = 0; i < size; i++)
+	CB<T>* previous = this->start;
+	for (unsigned i = 0; i < (size-1); i++)
 	{
 		previous = actual;
 		actual->nxtPtr = new CB<T>();
 		actual = actual->nxtPtr;
 		actual->prevPtr = previous;
 		actual->index = ++(previous->index);
+		actual->used = false;
 	}
 
 	//замыкание структуры
@@ -89,7 +91,7 @@ template<typename T>
 void CBuff<T>::pushCB(T data)
 {
 	CB<T>* actual = this->end;
-	if (actual->used = 0)
+	if (actual->used == 0)
 	{
 		actual->data = data;
 		actual->used = 1;
@@ -98,6 +100,7 @@ void CBuff<T>::pushCB(T data)
 	{
 		moveCB();
 		actual->data = data;
+		actual->used = 1;
 	}
 }
 
@@ -114,12 +117,12 @@ void CBuff<T>::moveCB()
 {
 	CB<T>* actual = this->start;
 	CB<T>* nxt = actual->nxtPtr;
-	while (actual->nxtPtr != this->end)
+	while (actual != this->end)
 	{
 		actual->data = nxt->data;
-		if (nxt->used == 1)
+		if (nxt->used == true)
 		{
-			actual->used == 1;
+			actual->used = true;
 		}
 		actual = actual->nxtPtr;
 		nxt = actual->nxtPtr;
@@ -145,7 +148,7 @@ template<typename T>
 void CBuff<T>::eraseCB(unsigned index)
 {
 	CB<T>* actual = this->start;
-	while (actual->index != where)
+	while (actual->index != index)
 	{
 		actual = actual->nxtPtr;
 	}
@@ -157,7 +160,7 @@ template<typename T>
 void CBuff<T>::viewCB()
 {
 	CB<T>* actual = this->start;
-	while (actual->nxtPtr != this->end)
+	while (actual != this->end)
 	{
 		cout << actual->data << " ";
 		actual = actual->nxtPtr;
