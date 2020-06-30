@@ -29,7 +29,7 @@ public:
 	void viewDLL();
 	void indexationDLL();
 	list<T>* beginDLL();
-	list<T>* endDLL();
+	list<T>* endingDLL();
 	unsigned countDLL();
 	void mergeDLL(list<T>& list);
 	void divideDLL(list<T>& list1, list<T>& empty_list, T value);
