@@ -82,13 +82,8 @@ list<T>::list()
 	sizeSLL = 0;
 	startSLL = nullptr;
 	endSLL = nullptr;
-}
-
-template<typename T>
-list<T>::list()
-{
 	sizeDLL = 0;
-	starDLL = nullptr;
+	startDLL = nullptr;
 	endDLL = nullptr;
 }
 
